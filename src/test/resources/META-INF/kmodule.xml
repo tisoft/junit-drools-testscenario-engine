@@ -1,0 +1,5 @@
+<kmodule xmlns="http://jboss.org/kie/6.0.0/kmodule" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <kbase name="de.tisoft.junit5.drools.testscenario.test.base" default="false" eventProcessingMode="stream" equalsBehavior="equality" packages="de.tisoft.junit5.drools.testscenario.test">
+    <ksession name="de.tisoft.junit5.drools.testscenario.test.session" type="stateful" default="false" clockType="realtime"/>
+  </kbase>
+</kmodule>

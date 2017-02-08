@@ -1,0 +1,8 @@
+package de.tisoft.junit5.drools.testscenario.test
+
+rule "rule1"
+    when
+        c: TestObject()
+    then
+        c.setValue("test");
+end

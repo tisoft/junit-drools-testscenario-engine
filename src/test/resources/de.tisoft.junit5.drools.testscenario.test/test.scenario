@@ -1,0 +1,41 @@
+<scenario>
+    <name>test.scenario</name>
+    <maxRuleFirings>100000</maxRuleFirings>
+    <globals/>
+    <fixtures>
+        <fact-data>
+            <type>TestObject</type>
+            <fieldData/>
+            <name>fact0</name>
+            <isModify>false</isModify>
+        </fact-data>
+        <execution-trace>
+            <executionTimeResult>39</executionTimeResult>
+            <numberOfRulesFired>1</numberOfRulesFired>
+        </execution-trace>
+        <expect-fact>
+            <fieldValues>
+                <expect-field>
+                    <fieldName>value</fieldName>
+                    <expected>test</expected>
+                    <successResult>true</successResult>
+                    <explanation>[fact0] field [value] was [test].</explanation>
+                    <operator>==</operator>
+                    <nature>1</nature>
+                </expect-field>
+            </fieldValues>
+            <name>fact0</name>
+            <anonymous>false</anonymous>
+        </expect-fact>
+    </fixtures>
+    <lastRunResult>2017-02-08 11:11:33.877 UTC</lastRunResult>
+    <rules/>
+    <inclusive>false</inclusive>
+    <packageName>de.tisoft.junit5.drools.testscenario.test</packageName>
+    <imports>
+        <imports/>
+    </imports>
+    <ksessions>
+        <string>de.tisoft.junit5.drools.testscenario.test.session</string>
+    </ksessions>
+</scenario>
