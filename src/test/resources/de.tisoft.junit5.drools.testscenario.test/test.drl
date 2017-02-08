@@ -2,7 +2,7 @@ package de.tisoft.junit5.drools.testscenario.test
 
 rule "rule1"
     when
-        c: TestObject()
+        c: ValueObject()
     then
         c.setValue("test");
 end

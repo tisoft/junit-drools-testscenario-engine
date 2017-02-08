@@ -4,7 +4,7 @@
     <globals/>
     <fixtures>
         <fact-data>
-            <type>TestObject</type>
+            <type>ValueObject</type>
             <fieldData/>
             <name>fact0</name>
             <isModify>false</isModify>

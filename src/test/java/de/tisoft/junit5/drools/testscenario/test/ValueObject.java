@@ -1,6 +1,6 @@
 package de.tisoft.junit5.drools.testscenario.test;
 
-public class TestObject {
+public class ValueObject {
     private String value;
 
     public String getValue() {

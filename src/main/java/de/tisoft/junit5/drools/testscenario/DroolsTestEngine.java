@@ -1,5 +1,6 @@
 package de.tisoft.junit5.drools.testscenario;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.drools.workbench.models.testscenarios.backend.ScenarioRunner;
 import org.drools.workbench.models.testscenarios.backend.util.ScenarioXMLPersistence;
 import org.drools.workbench.models.testscenarios.shared.Scenario;
@@ -38,35 +39,20 @@ public class DroolsTestEngine implements TestEngine {
     public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
         EngineDescriptor engineDescriptor = new EngineDescriptor(uniqueId, "Drools Scenario Engine");
         Reflections reflections = new Reflections("", new ResourcesScanner());
-        reflections.getResources(Pattern.compile(".*\\.scenario")).forEach(f -> {
-            engineDescriptor.addChild(new AbstractTestDescriptor(uniqueId.append("scenario", f), f) {
-                {
-                    //TODO: this should really be a file source, but the RunListAdapter does not support that yet
-                    setSource(new ClassSource(DroolsTestEngine.class.getName()));
-                }
-                @Override
-                public boolean isContainer() {
-                    return false;
-                }
-
-                @Override
-                public boolean isTest() {
-                    return true;
-                }
-            });
-        });
+        reflections.getResources(Pattern.compile(".*\\.scenario")).stream()
+                .map(f -> ScenarioXMLPersistence.getInstance()
+                        .unmarshal(new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/" + f)))
+                                .lines().collect(Collectors.joining("\n"))))
+                .forEach(f -> engineDescriptor.addChild(new DroolsTestDescriptor(uniqueId, f)));
 
         return engineDescriptor;
     }
 
     @Override
     public void execute(ExecutionRequest request) {
-        request.getRootTestDescriptor().getChildren().forEach(td -> {
+        request.getRootTestDescriptor().getChildren().stream().map(DroolsTestDescriptor.class::cast).forEach(td -> {
             request.getEngineExecutionListener().executionStarted(td);
-            Scenario scenario = ScenarioXMLPersistence.getInstance().unmarshal(
-                    new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/" + td.getDisplayName())))
-                            .lines().collect(Collectors.joining("\n")));
-
+            Scenario scenario = td.getScenario();
             KieServices ks = KieServices.Factory.get();
             KieContainer kieClasspathContainer = ks.getKieClasspathContainer();
 
@@ -90,5 +76,32 @@ public class DroolsTestEngine implements TestEngine {
             }
         });
 
+    }
+
+    @VisibleForTesting
+    static class DroolsTestDescriptor extends AbstractTestDescriptor {
+        private Scenario scenario;
+
+        public DroolsTestDescriptor(UniqueId uniqueId, Scenario scenario) {
+            super(uniqueId.append("scenario", scenario.getPackageName() + "." + scenario.getName()),
+                    scenario.getName());
+            this.scenario = scenario;
+            // TODO: this should really be a file source, but the RunListAdapter does not support that yet
+            setSource(new ClassSource(DroolsTestEngine.class.getName()));
+        }
+
+        @Override
+        public boolean isContainer() {
+            return false;
+        }
+
+        @Override
+        public boolean isTest() {
+            return true;
+        }
+
+        public Scenario getScenario() {
+            return scenario;
+        }
     }
 }
