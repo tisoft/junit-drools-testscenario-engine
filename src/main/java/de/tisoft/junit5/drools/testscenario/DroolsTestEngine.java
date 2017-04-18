@@ -91,6 +91,11 @@ public class DroolsTestEngine implements TestEngine {
         }
 
         @Override
+        public Type getType() {
+            return Type.TEST;
+        }
+
+        @Override
         public boolean isContainer() {
             return false;
         }
