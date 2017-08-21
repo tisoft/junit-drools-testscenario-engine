@@ -16,6 +16,7 @@ import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
+import org.opentest4j.AssertionFailedError;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
 import org.slf4j.Logger;
@@ -69,7 +70,7 @@ public class DroolsTestEngine implements TestEngine {
                     String message = scenario.getFailureMessages().stream().collect(Collectors.joining(", "));
                     LOGGER.error(message);
                     request.getEngineExecutionListener().executionFinished(td,
-                            TestExecutionResult.failed(new RuntimeException(message)));
+                            TestExecutionResult.failed(new AssertionFailedError(message)));
                 }
             } catch (Exception e) {
                 request.getEngineExecutionListener().executionFinished(td, TestExecutionResult.failed(e));
@@ -83,26 +84,16 @@ public class DroolsTestEngine implements TestEngine {
         private Scenario scenario;
 
         public DroolsTestDescriptor(UniqueId uniqueId, Scenario scenario) {
-            super(uniqueId.append("scenario", scenario.getPackageName() + "." + scenario.getName()),
-                    scenario.getName());
+            // TODO: this should really be a ClasspathResourceSource, but the
+            // org.junit.platform.surefire.provider.RunListenerAdapter does not support that yet
+            super(uniqueId.append("scenario", scenario.getPackageName() + "." + scenario.getName()), scenario.getName(),
+                    new ClassSource(DroolsTestEngine.class.getName()));
             this.scenario = scenario;
-            // TODO: this should really be a file source, but the RunListAdapter does not support that yet
-            setSource(new ClassSource(DroolsTestEngine.class.getName()));
         }
 
         @Override
         public Type getType() {
             return Type.TEST;
-        }
-
-        @Override
-        public boolean isContainer() {
-            return false;
-        }
-
-        @Override
-        public boolean isTest() {
-            return true;
         }
 
         public Scenario getScenario() {
