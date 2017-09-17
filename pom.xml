@@ -4,7 +4,8 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
     <properties>
-        <version.junit>5.0.0-RC3</version.junit>
+        <version.junit>5.0.0</version.junit>
+        <version.junit-platform>1.0.0</version.junit-platform>
         <version.kie>7.1.0.Final</version.kie>
         <version.slf4j>1.7.21</version.slf4j>
     </properties>
@@ -27,7 +28,7 @@
         <dependency>
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-engine</artifactId>
-            <version>1.0.0-RC3</version>
+            <version>${version.junit-platform}</version>
         </dependency>
         <dependency>
             <groupId>org.drools</groupId>
@@ -96,7 +97,7 @@
                     <dependency>
                         <groupId>org.junit.platform</groupId>
                         <artifactId>junit-platform-surefire-provider</artifactId>
-                        <version>1.0.0-RC3</version>
+                        <version>${version.junit-platform}</version>
                     </dependency>
                     <dependency>
                         <groupId>org.junit.jupiter</groupId>
