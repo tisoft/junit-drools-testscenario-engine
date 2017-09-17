@@ -87,7 +87,7 @@ public class DroolsTestEngine implements TestEngine {
             // TODO: this should really be a ClasspathResourceSource, but the
             // org.junit.platform.surefire.provider.RunListenerAdapter does not support that yet
             super(uniqueId.append("scenario", scenario.getPackageName() + "." + scenario.getName()), scenario.getName(),
-                    new ClassSource(DroolsTestEngine.class.getName()));
+                    ClassSource.from(DroolsTestEngine.class));
             this.scenario = scenario;
         }
 
